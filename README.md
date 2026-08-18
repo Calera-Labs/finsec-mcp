@@ -1,7 +1,7 @@
 # FINSEC — Certified SEC Memory MCP Server
 
 [![MCP Registry](https://img.shields.io/badge/MCP-Registry_Indexed-blue.svg)](https://registry.modelcontextprotocol.io)
-[![Smithery](https://img.shields.io/badge/Smithery-Certified-orange.svg)](https://smithery.ai/server/financesec-mcp)
+[![Smithery Badge](https://smithery.ai/badge/calera-labs/finsec)](https://smithery.ai/servers/calera-labs/finsec)
 [![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](LICENSE)
 [![Facts](https://img.shields.io/badge/SEC_Facts-4.06M_Certified-emerald.svg)](https://finsec.caleralabs.com)
 [![Zero Hallucination](https://img.shields.io/badge/Hallucination_Rate-0.00%25_(∂²=0)-purple.svg)](https://finsec.caleralabs.com)
