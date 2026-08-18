@@ -3,7 +3,7 @@
 
 name: financesec-mcp
 title: Calera FINSEC — Certified SEC Memory
-description: Certified SEC EDGAR fact memory for AI agents. Returns verified values with filing provenance or SAFE_REFUSAL. Zero hallucination guarantee — no language model in the fact path.
+description: Certified SEC EDGAR fact memory for AI agents with zero confabulation and cryptographic filing provenance across 10-K and 10-Q disclosures.
 homepage: https://finsec.caleralabs.com/mcp
 icon: https://finsec.caleralabs.com/assets/financial-sec-logo.svg
 license: Apache-2.0
@@ -26,8 +26,8 @@ config:
   properties:
     X-License-Key:
       type: string
-      description: Calera Labs FinanceSec API License Key (manage free at https://dashboard.caleralabs.com)
-      required: true
+      description: Optional for discovery & capabilities overview. Free API key from https://dashboard.caleralabs.com required for full EDGAR recall.
+      required: false
       isSecret: true
     low_tokens:
       type: boolean
@@ -71,20 +71,22 @@ tools:
     outputSchema:
       type: object
       properties:
-        content:
-          type: array
-          description: List of MCP output content blocks containing verified SEC fact payload or SAFE_REFUSAL.
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                description: Content MIME type (text)
-              text:
-                type: string
-                description: Serialized verified SEC fact response with cryptographic filing provenance
-      required:
-        - content
+        status:
+          type: string
+          description: Verification status (VERIFIED_SUCCESS | SAFE_REFUSAL)
+        value:
+          description: Verified metric numeric value
+        company:
+          type: string
+          description: Filer company name
+        concept:
+          type: string
+          description: US-GAAP concept
+        period:
+          type: string
+          description: Fiscal period
+        hash:
+          description: Cryptographic audit hash
 
   - name: valuation_inputs
     version: 1.2.1
@@ -115,17 +117,16 @@ tools:
     outputSchema:
       type: object
       properties:
-        content:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-              text:
-                type: string
-      required:
-        - content
+        status:
+          type: string
+          description: Pack status (COMPLETE | SAFE_REFUSAL)
+        company:
+          type: string
+        pack:
+          type: string
+        cells:
+          type: object
+          description: Certified pack cells dictionary
 
   - name: query_sec_metric_exact
     version: 1.2.1
@@ -157,17 +158,16 @@ tools:
     outputSchema:
       type: object
       properties:
-        content:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-              text:
-                type: string
-      required:
-        - content
+        status:
+          type: string
+        value:
+          description: Exact metric cell value
+        company:
+          type: string
+        concept:
+          type: string
+        period:
+          type: string
 
   - name: compute_sec_cagr
     version: 1.2.1
@@ -203,17 +203,19 @@ tools:
     outputSchema:
       type: object
       properties:
-        content:
+        status:
+          type: string
+        op:
+          type: string
+        value:
+          type: number
+          description: Exact CAGR floating point value
+        formatted:
+          type: string
+          description: Formatted CAGR percentage string (e.g. 11.77%)
+        operands:
           type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-              text:
-                type: string
-      required:
-        - content
+          description: Metric values used in CAGR calculation with filing provenance
 
   - name: lattice_arith_evaluate
     version: 1.2.1
@@ -255,17 +257,16 @@ tools:
     outputSchema:
       type: object
       properties:
-        content:
+        status:
+          type: string
+        op:
+          type: string
+        value:
+          description: Calculation result
+        formatted:
+          type: string
+        operands:
           type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-              text:
-                type: string
-      required:
-        - content
 
   - name: vln_capabilities_overview
     version: 1.2.1
@@ -282,17 +283,14 @@ tools:
     outputSchema:
       type: object
       properties:
-        content:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-              text:
-                type: string
-      required:
-        - content
+        platform:
+          type: string
+        version:
+          type: string
+        certified_valuation_packs:
+          type: object
+        certified_financial_arithmetic:
+          type: object
 
   - name: query_sec_sector_peers
     version: 1.2.1
@@ -323,14 +321,8 @@ tools:
     outputSchema:
       type: object
       properties:
-        content:
+        status:
+          type: string
+        peers:
           type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-              text:
-                type: string
-      required:
-        - content
+          description: List of peer company metrics
