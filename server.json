@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.caseyyahbara/finsec",
+  "name": "io.github.CaseyYahbara/finsec",
   "title": "Calera FINSEC — Certified SEC Memory",
   "description": "Certified SEC EDGAR fact memory for AI agents with zero hallucination and filing provenance.",
   "repository": {
