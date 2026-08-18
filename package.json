@@ -1,8 +1,8 @@
 {
   "name": "@caleralabs/finsec-mcp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Official Calera Labs FINSEC Model Context Protocol (MCP) Connector",
-  "mcpName": "io.github.calera-labs/finsec",
+  "mcpName": "io.github.CaseyYahbara/finsec",
   "repository": {
     "type": "git",
     "url": "https://github.com/Calera-Labs/finsec-mcp.git"
