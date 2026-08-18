@@ -21,16 +21,28 @@ transport:
   type: http
   url: https://finsec.caleralabs.com/mcp
 
-# Authentication requirements
-auth:
-  type: header
-  headerName: X-License-Key
-  description: Calera Labs FinanceSec API License Key (manage free at https://dashboard.caleralabs.com)
+# Authentication & Configuration Requirements (Required + Optional for 100% Config UX)
+config:
+  properties:
+    X-License-Key:
+      type: string
+      description: Calera Labs FinanceSec API License Key (manage free at https://dashboard.caleralabs.com)
+      required: true
+      isSecret: true
+    low_tokens:
+      type: boolean
+      description: Optional. Enable compact 38-token schema for high-QPS agent swarms.
+      required: false
+      default: false
+    target_currency:
+      type: string
+      description: Optional default ISO 4217 target currency (e.g. USD, EUR).
+      required: false
 
-# Certified 7-Tool Surface Area
+# Certified 7-Tool Surface Area with Input & Output Schemas
 tools:
   - name: query_financial_sec
-    version: 1.2.0
+    version: 1.2.1
     description: >-
       Certified SEC fact query. Returns verified values with provenance or SAFE_REFUSAL.
       Does not invent numbers. Treat SAFE_REFUSAL as success-of-honesty, not a tool failure.
@@ -56,9 +68,26 @@ tools:
           description: Optional. When true, returns compact JSON schema.
       required:
         - query
+    outputSchema:
+      type: object
+      properties:
+        content:
+          type: array
+          description: List of MCP output content blocks containing verified SEC fact payload or SAFE_REFUSAL.
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Content MIME type (text)
+              text:
+                type: string
+                description: Serialized verified SEC fact response with cryptographic filing provenance
+      required:
+        - content
 
   - name: valuation_inputs
-    version: 1.2.0
+    version: 1.2.1
     description: >-
       Certified SEC/EDGAR valuation inputs pack (12 packs including dcf_valuation_inputs historical FCF).
       Not market EV, P/E, or trading DCF.
@@ -83,9 +112,23 @@ tools:
       required:
         - company
         - pack
+    outputSchema:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              text:
+                type: string
+      required:
+        - content
 
   - name: query_sec_metric_exact
-    version: 1.2.0
+    version: 1.2.1
     description: >-
       Exact single-cell EDGAR metric recall for company + period + concept.
       Server-side verified fact with filing provenance.
@@ -111,9 +154,23 @@ tools:
         - company
         - metric
         - period
+    outputSchema:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              text:
+                type: string
+      required:
+        - content
 
   - name: compute_sec_cagr
-    version: 1.2.0
+    version: 1.2.1
     description: >-
       Domain 31 lattice logarithmic walk CAGR over verified filing facts.
       Calculates compound annual growth rate without language model estimation.
@@ -143,9 +200,23 @@ tools:
         - metric
         - start_period
         - end_period
+    outputSchema:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              text:
+                type: string
+      required:
+        - content
 
   - name: lattice_arith_evaluate
-    version: 1.2.0
+    version: 1.2.1
     description: >-
       Domain 31 exact zero-hallucination algebraic solver (cagr, ratio, multiply, divide, yoy_series, product_chain)
       over verified FINSEC EDGAR cells.
@@ -181,9 +252,23 @@ tools:
           description: Optional. When true, returns compact JSON schema.
       required:
         - op
+    outputSchema:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              text:
+                type: string
+      required:
+        - content
 
   - name: vln_capabilities_overview
-    version: 1.2.0
+    version: 1.2.1
     description: Dynamic scope overview and capability boundaries for the Volumetric Lattice Network.
     annotations:
       title: VLN Capabilities Overview
@@ -194,9 +279,23 @@ tools:
         low_tokens:
           type: boolean
           description: Optional. When true, returns compact JSON schema.
+    outputSchema:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              text:
+                type: string
+      required:
+        - content
 
   - name: query_sec_sector_peers
-    version: 1.2.0
+    version: 1.2.1
     description: Multi-company sector and industry financial comparisons declared in SEC filings.
     annotations:
       title: Query SEC Sector Peers
@@ -221,3 +320,17 @@ tools:
           description: Optional. When true, returns compact JSON schema.
       required:
         - sector_or_industry
+    outputSchema:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              text:
+                type: string
+      required:
+        - content
