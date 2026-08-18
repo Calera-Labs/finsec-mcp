@@ -110,8 +110,8 @@ The FINSEC MCP server exposes **7 certified tools**:
 | `query_financial_sec` | Natural-language query over 4.06M certified SEC EDGAR facts with provenance or honest `SAFE_REFUSAL`. |
 | `valuation_inputs` | 12 Certified Valuation Packs (DCF inputs, FCF, Altman Z', Beneish M, DuPont 5-step, Piotroski F). |
 | `query_sec_metric_exact` | Exact single-cell EDGAR metric recall for company + period + concept. |
-| `compute_sec_cagr` | Domain 31 lattice logarithmic walk CAGR over verified filing facts. |
-| `lattice_arith_evaluate` | Domain 31 exact zero-hallucination algebraic solver (`cagr`, `ratio`, `multiply`, `chain`). |
+| `compute_sec_cagr` | Exact compound annual growth rate (CAGR) calculation over verified SEC filing facts with zero confabulation. |
+| `lattice_arith_evaluate` | Deterministic zero-error algebraic solver (`cagr`, `ratio`, `multiply`, `divide`, `yoy_series`, `product_chain`). |
 | `vln_capabilities_overview` | Dynamic scope overview and capability boundaries. |
 | `query_sec_sector_peers` | Multi-company sector & industry financial comparisons. |
 

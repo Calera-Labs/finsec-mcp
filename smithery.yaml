@@ -172,10 +172,10 @@ tools:
   - name: compute_sec_cagr
     version: 1.2.1
     description: >-
-      Domain 31 lattice logarithmic walk CAGR over verified filing facts.
-      Calculates compound annual growth rate without language model estimation.
+      Exact compound annual growth rate (CAGR) calculation over verified SEC filing facts.
+      Deterministic mathematical execution with zero language model confabulation.
     annotations:
-      title: Compute SEC CAGR
+      title: Compute Certified SEC CAGR
       readOnlyHint: true
     inputSchema:
       type: object
@@ -218,10 +218,10 @@ tools:
   - name: lattice_arith_evaluate
     version: 1.2.1
     description: >-
-      Domain 31 exact zero-hallucination algebraic solver (cagr, ratio, multiply, divide, yoy_series, product_chain)
-      over verified FINSEC EDGAR cells.
+      Deterministic zero-error algebraic solver (cagr, ratio, multiply, divide, yoy_series, product_chain)
+      over verified SEC EDGAR financial metrics.
     annotations:
-      title: Domain 31 Lattice Arithmetic
+      title: Certified Financial Arithmetic
       readOnlyHint: true
     inputSchema:
       type: object
