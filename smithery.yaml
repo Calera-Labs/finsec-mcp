@@ -2,8 +2,10 @@
 # https://smithery.ai/docs/config
 
 name: financesec-mcp
-description: Certified SEC fact query for AI agents. Returns verified values with filing provenance or SAFE_REFUSAL. No language model in the fact path.
+title: Calera FINSEC — Certified SEC Memory
+description: Certified SEC EDGAR fact memory for AI agents. Returns verified values with filing provenance or SAFE_REFUSAL. Zero hallucination guarantee — no language model in the fact path.
 homepage: https://finsec.caleralabs.com/mcp
+icon: https://finsec.caleralabs.com/assets/financial-sec-logo.svg
 license: Apache-2.0
 publisher: Calera Labs
 tags:
@@ -23,9 +25,9 @@ transport:
 auth:
   type: header
   headerName: X-License-Key
-  description: Calera Labs FinanceSec API License Key (manage at https://dashboard.caleralabs.com)
+  description: Calera Labs FinanceSec API License Key (manage free at https://dashboard.caleralabs.com)
 
-# Certified Tool Definitions
+# Certified 7-Tool Surface Area
 tools:
   - name: query_financial_sec
     version: 1.2.0
@@ -42,16 +44,180 @@ tools:
       properties:
         query:
           type: string
-          description: >-
-            Natural language financial question. Append 'in USD' (or another supported ISO code)
-            to convert foreign reporting currencies after verified recall.
+          description: Natural language financial question. Append 'in USD' to convert reporting currency.
         target_currency:
           type: string
-          description: >-
-            Optional ISO 4217 code (e.g. USD, EUR) for post-recall FX conversion using audited
-            annual-average rates. Provenance records original_unit, fx_rate, and fx_converted.
+          description: Optional ISO 4217 code (e.g. USD, EUR) for post-recall FX conversion.
         usd_only:
           type: boolean
           description: When true, forces monetary answers into USD.
+        low_tokens:
+          type: boolean
+          description: Optional. When true, returns compact JSON schema.
       required:
         - query
+
+  - name: valuation_inputs
+    version: 1.2.0
+    description: >-
+      Certified SEC/EDGAR valuation inputs pack (12 packs including dcf_valuation_inputs historical FCF).
+      Not market EV, P/E, or trading DCF.
+    annotations:
+      title: Get Certified SEC Valuation Pack
+      readOnlyHint: true
+    inputSchema:
+      type: object
+      properties:
+        company:
+          type: string
+          description: Company ticker or name, e.g. AAPL, TSLA, MSFT
+        pack:
+          type: string
+          description: Certified SEC valuation pack ID (dcf_valuation_inputs, dupont_5step, altman_z_prime, etc.)
+        period:
+          type: string
+          description: Optional reporting period, e.g. FY2023, Q3 FY2023. Defaults to FY2023 if omitted.
+        low_tokens:
+          type: boolean
+          description: Optional. When true, returns compact JSON schema.
+      required:
+        - company
+        - pack
+
+  - name: query_sec_metric_exact
+    version: 1.2.0
+    description: >-
+      Exact single-cell EDGAR metric recall for company + period + concept.
+      Server-side verified fact with filing provenance.
+    annotations:
+      title: Exact SEC Metric Recall
+      readOnlyHint: true
+    inputSchema:
+      type: object
+      properties:
+        company:
+          type: string
+          description: Company ticker or name, e.g. AAPL
+        metric:
+          type: string
+          description: EDGAR metric, e.g. net income, free cash flow, total revenue
+        period:
+          type: string
+          description: Fiscal period, e.g. FY2023
+        low_tokens:
+          type: boolean
+          description: Optional. When true, returns compact JSON schema.
+      required:
+        - company
+        - metric
+        - period
+
+  - name: compute_sec_cagr
+    version: 1.2.0
+    description: >-
+      Domain 31 lattice logarithmic walk CAGR over verified filing facts.
+      Calculates compound annual growth rate without language model estimation.
+    annotations:
+      title: Compute SEC CAGR
+      readOnlyHint: true
+    inputSchema:
+      type: object
+      properties:
+        company:
+          type: string
+          description: Company ticker or name, e.g. AAPL
+        metric:
+          type: string
+          description: EDGAR metric to compound, e.g. revenue, free cash flow
+        start_period:
+          type: string
+          description: Start fiscal period, e.g. FY2020
+        end_period:
+          type: string
+          description: End fiscal period, e.g. FY2023
+        low_tokens:
+          type: boolean
+          description: Optional. When true, returns compact JSON schema.
+      required:
+        - company
+        - metric
+        - start_period
+        - end_period
+
+  - name: lattice_arith_evaluate
+    version: 1.2.0
+    description: >-
+      Domain 31 exact zero-hallucination algebraic solver (cagr, ratio, multiply, divide, yoy_series, product_chain)
+      over verified FINSEC EDGAR cells.
+    annotations:
+      title: Domain 31 Lattice Arithmetic
+      readOnlyHint: true
+    inputSchema:
+      type: object
+      properties:
+        op:
+          type: string
+          description: Operation (cagr | ratio | multiply | divide | yoy_series | product_chain)
+        company:
+          type: string
+          description: Ticker or name when fetching EDGAR cells
+        metric:
+          type: string
+          description: EDGAR metric, e.g. free cash flow, revenue
+        start_period:
+          type: string
+          description: Start period, e.g. FY2020
+        end_period:
+          type: string
+          description: End period, e.g. FY2023
+        periods:
+          type: string
+          description: Optional comma-separated fiscal periods for series
+        factors:
+          type: string
+          description: Optional comma-separated positive factors for product_chain
+        low_tokens:
+          type: boolean
+          description: Optional. When true, returns compact JSON schema.
+      required:
+        - op
+
+  - name: vln_capabilities_overview
+    version: 1.2.0
+    description: Dynamic scope overview and capability boundaries for the Volumetric Lattice Network.
+    annotations:
+      title: VLN Capabilities Overview
+      readOnlyHint: true
+    inputSchema:
+      type: object
+      properties:
+        low_tokens:
+          type: boolean
+          description: Optional. When true, returns compact JSON schema.
+
+  - name: query_sec_sector_peers
+    version: 1.2.0
+    description: Multi-company sector and industry financial comparisons declared in SEC filings.
+    annotations:
+      title: Query SEC Sector Peers
+      readOnlyHint: true
+    inputSchema:
+      type: object
+      properties:
+        sector_or_industry:
+          type: string
+          description: Industry or sector description as declared in SEC filings (e.g. semiconductors, optics)
+        metrics:
+          type: string
+          description: Optional comma-separated SEC XBRL metrics
+        period:
+          type: string
+          description: Optional filing period, e.g. FY2025
+        limit:
+          type: number
+          description: Optional peer limit, default 5
+        low_tokens:
+          type: boolean
+          description: Optional. When true, returns compact JSON schema.
+      required:
+        - sector_or_industry
