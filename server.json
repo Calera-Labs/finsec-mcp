@@ -1,6 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.calera-labs/finsec",
+  "title": "Calera FINSEC — Certified SEC Memory",
   "description": "Certified SEC EDGAR fact memory for AI agents with zero hallucination and cryptographic filing provenance.",
   "repository": {
     "url": "https://github.com/Calera-Labs/finsec-mcp",
@@ -9,12 +10,12 @@
   "version": "1.2.0",
   "remotes": [
     {
-      "type": "http",
+      "type": "streamable-http",
       "url": "https://finsec.caleralabs.com/mcp",
       "headers": [
         {
           "name": "X-License-Key",
-          "description": "Calera Labs License Key (obtain free at https://dashboard.caleralabs.com)",
+          "description": "Calera Labs API Key (obtain free at https://dashboard.caleralabs.com)",
           "isRequired": true,
           "isSecret": true
         }
