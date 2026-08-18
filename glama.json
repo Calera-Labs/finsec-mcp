@@ -1,13 +1,17 @@
 {
-  "$schema": "https://glama.ai/mcp/schemas/v1/server.json",
-  "name": "financesec-mcp",
-  "title": "FINSEC — Certified SEC Facts",
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "name": "finsec-mcp",
+  "title": "Calera FINSEC — Certified SEC Memory",
   "vendor": "Calera Labs",
+  "maintainers": [
+    "CaseyYahbara"
+  ],
   "homepage": "https://finsec.caleralabs.com/mcp",
   "privacyPolicy": "https://caleralabs.com/privacy",
   "documentation": "https://finsec.caleralabs.com/mcp",
-  "description": "Certified SEC fact query for AI agents. Returns verified values with filing provenance or SAFE_REFUSAL. No language model in the fact path.",
-  "version": "1.2.0",
+  "license": "Apache-2.0",
+  "description": "Certified SEC EDGAR fact memory for AI agents with zero confabulation and cryptographic filing provenance across 10-K and 10-Q disclosures.",
+  "version": "1.2.1",
   "transport": {
     "type": "http",
     "url": "https://finsec.caleralabs.com/mcp",
@@ -22,31 +26,65 @@
   "tools": [
     {
       "name": "query_financial_sec",
-      "version": "1.2.0",
-      "description": "Certified SEC fact query. Returns verified values with provenance or SAFE_REFUSAL. Does not invent numbers. Treat SAFE_REFUSAL as success-of-honesty, not a tool failure. Monetary answers default to the filer's reporting currency; request FX conversion via target_currency / usd_only or natural-language 'in USD'.",
+      "version": "1.2.1",
+      "description": "Certified SEC fact query. Returns verified values with provenance or SAFE_REFUSAL. Does not invent numbers. Treat SAFE_REFUSAL as success-of-honesty, not a tool failure.",
       "annotations": {
         "title": "Query Certified SEC Facts",
         "readOnlyHint": true
-      },
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "query": {
-            "type": "string",
-            "description": "Natural language financial question. Append 'in USD' (or another supported ISO code) to convert foreign reporting currencies after verified recall."
-          },
-          "target_currency": {
-            "type": "string",
-            "description": "Optional ISO 4217 code (e.g. USD, EUR) for post-recall FX conversion using audited annual-average rates. Provenance records original_unit, fx_rate, and fx_converted."
-          },
-          "usd_only": {
-            "type": "boolean",
-            "description": "When true, forces monetary answers into USD."
-          }
-        },
-        "required": [
-          "query"
-        ]
+      }
+    },
+    {
+      "name": "valuation_inputs",
+      "version": "1.2.1",
+      "description": "Certified SEC/EDGAR valuation inputs pack (12 packs including dcf_valuation_inputs historical FCF).",
+      "annotations": {
+        "title": "Get Certified SEC Valuation Pack",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "query_sec_metric_exact",
+      "version": "1.2.1",
+      "description": "Exact single-cell EDGAR metric recall for company + period + concept. Server-side verified fact with filing provenance.",
+      "annotations": {
+        "title": "Exact SEC Metric Recall",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "compute_sec_cagr",
+      "version": "1.2.1",
+      "description": "Domain 31 lattice logarithmic walk CAGR over verified filing facts. Calculates compound annual growth rate without language model estimation.",
+      "annotations": {
+        "title": "Compute SEC CAGR",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "lattice_arith_evaluate",
+      "version": "1.2.1",
+      "description": "Domain 31 exact zero-hallucination algebraic solver (cagr, ratio, multiply, divide, yoy_series, product_chain) over verified FINSEC EDGAR cells.",
+      "annotations": {
+        "title": "Domain 31 Lattice Arithmetic",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "vln_capabilities_overview",
+      "version": "1.2.1",
+      "description": "Dynamic scope overview and capability boundaries for the Volumetric Lattice Network.",
+      "annotations": {
+        "title": "VLN Capabilities Overview",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "query_sec_sector_peers",
+      "version": "1.2.1",
+      "description": "Multi-company sector and industry financial comparisons declared in SEC filings.",
+      "annotations": {
+        "title": "Query SEC Sector Peers",
+        "readOnlyHint": true
       }
     }
   ],
@@ -56,6 +94,7 @@
     "finance",
     "verified-facts",
     "provenance",
-    "certified-facts"
+    "certified-facts",
+    "zero-confabulation"
   ]
 }
