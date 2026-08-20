@@ -1,0 +1,4 @@
+.mcpregistry_*
+*.token
+__pycache__/
+*.pyc
