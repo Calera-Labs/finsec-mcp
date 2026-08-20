@@ -160,6 +160,37 @@ Generate your free or enterprise API key on the **Universal Dashboard**:
 
 ---
 
+## 💬 Customer Support & Immediate Slack Pipeline
+
+Have a question, encountered an edge case, or need a quota increase for your team?
+
+We have a 3-tier Slack customer response pipeline wired directly into our engineering and executive teams:
+
+### 1. Directly in Your AI Assistant (Claude, Cursor, Zed, Cline)
+Use the built-in MCP tool `submit_support_ticket`:
+```json
+{
+  "title": "Need 50k req/min quota for quant backtesting cluster",
+  "description": "We are running systematic macro backtests across 500 tickers simultaneously.",
+  "inquiry_type": "quota_increase",
+  "priority": "high",
+  "contact_email": "quant-lead@firm.com"
+}
+```
+
+### 2. Live Web Portal & Slack Escalation Center
+Submit tickets, questions, or feature requests directly from the Universal Dashboard:
+👉 **[https://dashboard.caleralabs.com/dashboard#customer_service](https://dashboard.caleralabs.com/dashboard#customer_service)**
+
+### 3. Response SLAs
+| Tier | Responder | SLA Guarantee |
+| :--- | :--- | :--- |
+| **Tier 1 (Normal)** | Customer Success Manager (`@manager_oncall`) | < 4 Hours |
+| **Tier 2 (High / Quota)** | Operations Owner (`@owner_oncall`) | < 2 Hours |
+| **Tier 3 (Critical / VIP)** | Founder & CEO Casey (`@casey`) | < 1 Hour |
+
+---
+
 ## 📄 License & Attribution
 
 * Connector specification and client schemas are licensed under the [Apache-2.0 License](LICENSE).
