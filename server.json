@@ -7,11 +7,13 @@
     "url": "https://github.com/Calera-Labs/finsec-mcp",
     "source": "github"
   },
-  "version": "1.2.1",
+  "version": "1.2.2",
+  "protocolVersion": "2026-07-28",
   "remotes": [
     {
       "type": "streamable-http",
       "url": "https://finsec.caleralabs.com/mcp",
+      "protocolVersion": "2026-07-28",
       "headers": [
         {
           "name": "X-License-Key",

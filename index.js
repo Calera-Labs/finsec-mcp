@@ -20,15 +20,24 @@ rl.on('line', async (line) => {
 
   try {
     const payload = JSON.parse(line);
-    
+    const headers = {
+      'Content-Type': 'application/json',
+      'X-License-Key': LICENSE_KEY,
+      'MCP-Protocol-Version': '2026-07-28',
+      'User-Agent': 'Calera-FINSEC-MCP-Node/1.2.2'
+    };
+
+    if (payload && payload.method) {
+      headers['Mcp-Method'] = String(payload.method);
+      if (payload.params && payload.params.name) {
+        headers['Mcp-Name'] = String(payload.params.name);
+      }
+    }
+
     // Forward JSON-RPC request to Calera FINSEC endpoint
     const response = await fetch(API_ENDPOINT, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-License-Key': LICENSE_KEY,
-        'User-Agent': 'Calera-FINSEC-MCP-Node/1.2.1'
-      },
+      headers,
       body: JSON.stringify(payload)
     });
 

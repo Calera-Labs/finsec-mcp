@@ -11,11 +11,14 @@
   "documentation": "https://finsec.caleralabs.com/mcp",
   "license": "Apache-2.0",
   "description": "Certified SEC EDGAR fact memory for AI agents with zero confabulation and cryptographic filing provenance across 10-K and 10-Q disclosures.",
-  "version": "1.2.1",
+  "version": "1.2.2",
+  "protocolVersion": "2026-07-28",
+  "stateless": true,
   "transport": {
     "type": "http",
     "url": "https://finsec.caleralabs.com/mcp",
     "protocols": [
+      "2026-07-28",
       "mcp-streamable-http-v1"
     ]
   },

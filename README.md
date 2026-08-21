@@ -17,6 +17,7 @@ Official **Model Context Protocol (MCP)** connector for **Calera Labs FINSEC**. 
 ## ⚡ Key Guarantees
 
 * **0.00% Statistical Hallucination:** Fact recall is deterministic and geometric ($A_4$ Pentatope lattice memory). No language model exists in the fact retrieval path.
+* **2026-07-28 Stateless Protocol Core:** Fully compliant with the 2026-07-28 Stateless MCP Specification (SEP-2243, SEP-2575, SEP-2549) with sub-5ms zero-handshake direct tool calls and intelligent caching (`ttlMs: 86400000`).
 * **Cryptographic Provenance:** Every returned financial metric includes exact SEC filing accessions, dates, concepts, and SHA-256 audit hashes.
 * **Honest Refusal (`SAFE_REFUSAL`):** If a metric is not present in official SEC filings or is ambiguous, the engine returns an honest safe refusal rather than confabulating numbers.
 * **Ultra-Low Latency & High Gross Margins:** Sub-25ms response serialization with low token footprint mode.

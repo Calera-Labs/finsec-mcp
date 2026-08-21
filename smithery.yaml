@@ -16,10 +16,12 @@ tags:
   - provenance
   - financial-facts
 
-# Transport configuration (Streamable Remote HTTP)
+# Transport configuration (Streamable Remote HTTP / 2026-07-28 Stateless Core)
 transport:
   type: http
   url: https://finsec.caleralabs.com/mcp
+  protocolVersion: "2026-07-28"
+  stateless: true
 
 # Authentication & Configuration Requirements (Required + Optional for 100% Config UX)
 config:
