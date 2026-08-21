@@ -1,0 +1,28 @@
+name: 💡 Feature Request
+description: Propose a new feature, valuation metric pack, or tool capability for FINSEC MCP
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We welcome community suggestions and requests for new SEC EDGAR fact analysis tools and valuation packs.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Motivation
+      description: Is your request related to a financial analysis workflow, GAAP/IFRS reconciliation, or automated screening?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Feature / Tool Design
+      description: Describe what new tool, financial metric, or behavior you would like to see.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative metrics or formulas you've evaluated.

@@ -191,6 +191,12 @@ Submit tickets, questions, or feature requests directly from the Universal Dashb
 
 ---
 
+## 🔗 Related Calera MCP Servers
+
+* **[Calera Infinite Context (ICX) MCP](https://github.com/Calera-Labs/icx-mcp):** Persistent epistemic memory and sub-5ms associative recall on the Volumetric Lattice Network for AI agents ([Glama Hub](https://glama.ai/mcp/servers/Calera-Labs/icx-mcp) · [Smithery](https://smithery.ai/servers/calera-labs/icx-mcp)).
+
+---
+
 ## 📄 License & Attribution
 
 * Connector specification and client schemas are licensed under the [Apache-2.0 License](LICENSE).
