@@ -27,64 +27,431 @@
     {
       "name": "query_financial_sec",
       "version": "1.2.1",
-      "description": "Certified SEC fact query. Returns verified values with provenance or SAFE_REFUSAL. Does not invent numbers. Treat SAFE_REFUSAL as success-of-honesty, not a tool failure.",
+      "description": "Certified SEC fact query against official SEC EDGAR disclosures (10-K, 10-Q, 8-K) powered by Calera Episteme-1. Returns verified numerical values with cryptographic filing provenance or an honest SAFE_REFUSAL. Does not guess or hallucinate numbers. Use this tool for natural-language financial questions, revenue, net income, cash flow, margins, and historical company metrics. Monetary answers default to the filer's reporting currency (use target_currency or append 'in USD' for audited FX conversion). Treat SAFE_REFUSAL as a success-of-honesty, indicating the metric was not disclosed in official SEC filings.",
       "annotations": {
         "title": "Query Certified SEC Facts",
         "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Natural language financial question (e.g. 'What was Apple's FY2023 revenue?', 'Microsoft R&D expenses in 2022'). Append 'in USD' to convert reporting currency."
+          },
+          "target_currency": {
+            "type": "string",
+            "description": "Optional ISO 4217 code (e.g. USD, EUR, GBP) for post-recall FX conversion using audited annual-average rates."
+          },
+          "usd_only": {
+            "type": "boolean",
+            "description": "When true, forces monetary answers into USD."
+          },
+          "low_tokens": {
+            "type": "boolean",
+            "description": "Optional. When true, returns compact JSON schema optimized for high-QPS agent swarms."
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Verification status (VERIFIED_SUCCESS | SAFE_REFUSAL)"
+          },
+          "value": {
+            "description": "Verified metric numeric value"
+          },
+          "company": {
+            "type": "string",
+            "description": "Filer company name"
+          },
+          "concept": {
+            "type": "string",
+            "description": "US-GAAP concept identifier"
+          },
+          "period": {
+            "type": "string",
+            "description": "Fiscal reporting period"
+          },
+          "hash": {
+            "type": "string",
+            "description": "Cryptographic audit hash verifying SEC EDGAR filing provenance"
+          }
+        },
+        "required": [
+          "status"
+        ]
       }
     },
     {
       "name": "valuation_inputs",
       "version": "1.2.1",
-      "description": "Certified SEC/EDGAR valuation inputs pack (12 packs including dcf_valuation_inputs historical FCF).",
+      "description": "Retrieves certified SEC/EDGAR valuation inputs packs (12 packs including dcf_valuation_inputs, dupont_5step, altman_z_prime, benish_m_score, piotroski_f_score, working_capital, debt_coverage, roic_wacc_inputs). Use this tool when performing structured valuation modeling, financial distress scoring, or fundamental earnings quality analysis. Returns verified historical line items and balance sheet components. Do NOT use for real-time market stock prices, enterprise value (EV), or forward-looking trading estimates.",
       "annotations": {
         "title": "Get Certified SEC Valuation Pack",
         "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string",
+            "description": "Company ticker or name, e.g. AAPL, TSLA, MSFT, NVDA"
+          },
+          "pack": {
+            "type": "string",
+            "description": "Certified SEC valuation pack ID (e.g. 'dcf_valuation_inputs', 'dupont_5step', 'altman_z_prime', 'piotroski_f_score')"
+          },
+          "period": {
+            "type": "string",
+            "description": "Optional reporting period, e.g. 'FY2023', 'Q3 FY2023'. Defaults to latest audited fiscal year if omitted."
+          },
+          "low_tokens": {
+            "type": "boolean",
+            "description": "Optional. When true, returns compact JSON schema."
+          }
+        },
+        "required": [
+          "company",
+          "pack"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Pack status (COMPLETE | SAFE_REFUSAL)"
+          },
+          "company": {
+            "type": "string",
+            "description": "Filer ticker or legal entity"
+          },
+          "pack": {
+            "type": "string",
+            "description": "Valuation pack identifier"
+          },
+          "cells": {
+            "type": "object",
+            "description": "Certified pack cells dictionary containing filing values and accession metadata"
+          }
+        },
+        "required": [
+          "status",
+          "company",
+          "pack"
+        ]
       }
     },
     {
       "name": "query_sec_metric_exact",
       "version": "1.2.1",
-      "description": "Exact single-cell EDGAR metric recall for company + period + concept. Server-side verified fact with filing provenance.",
+      "description": "Exact single-cell SEC EDGAR metric recall for a specified company ticker, fiscal period, and financial concept. Server-side verified fact with complete accession and filing provenance. Use this tool when querying precise accounting items (e.g. Total Revenue, Net Income, Operating Cash Flow, R&D Expenses) for a specific fiscal year or quarter. Returns SAFE_REFUSAL if the exact concept is not declared in the filer's XBRL taxonomy.",
       "annotations": {
         "title": "Exact SEC Metric Recall",
         "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string",
+            "description": "Company ticker or legal name, e.g. AAPL"
+          },
+          "metric": {
+            "type": "string",
+            "description": "EDGAR accounting metric (e.g. 'Revenues', 'NetIncomeLoss', 'OperatingIncomeLoss', 'FreeCashFlow')"
+          },
+          "period": {
+            "type": "string",
+            "description": "Fiscal period (e.g. 'FY2023', 'FY2022', 'Q3 FY2023')"
+          },
+          "low_tokens": {
+            "type": "boolean",
+            "description": "Optional. When true, returns compact JSON schema."
+          }
+        },
+        "required": [
+          "company",
+          "metric",
+          "period"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Recall status (VERIFIED_SUCCESS | SAFE_REFUSAL)"
+          },
+          "value": {
+            "description": "Exact numerical cell value"
+          },
+          "company": {
+            "type": "string"
+          },
+          "concept": {
+            "type": "string"
+          },
+          "period": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ]
       }
     },
     {
       "name": "compute_sec_cagr",
       "version": "1.2.1",
-      "description": "Exact compound annual growth rate (CAGR) calculation over verified SEC filing facts. Deterministic mathematical execution with zero language model confabulation.",
+      "description": "Calculates the exact Compound Annual Growth Rate (CAGR) over certified SEC filing facts. Executes deterministic mathematical computation with 0.00% statistical hallucination. Use this tool when evaluating multi-year growth rates for revenue, net income, operating cash flow, or EPS across fiscal periods. Returns the exact float CAGR, formatted percentage string, and underlying filing operands with provenance.",
       "annotations": {
         "title": "Compute Certified SEC CAGR",
         "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string",
+            "description": "Company ticker or name, e.g. AAPL"
+          },
+          "metric": {
+            "type": "string",
+            "description": "EDGAR metric to compound (e.g. 'revenue', 'net_income', 'free_cash_flow')"
+          },
+          "start_period": {
+            "type": "string",
+            "description": "Start fiscal period (e.g. 'FY2020')"
+          },
+          "end_period": {
+            "type": "string",
+            "description": "End fiscal period (e.g. 'FY2023')"
+          },
+          "low_tokens": {
+            "type": "boolean",
+            "description": "Optional. When true, returns compact JSON schema."
+          }
+        },
+        "required": [
+          "company",
+          "metric",
+          "start_period",
+          "end_period"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Computation status (VERIFIED_SUCCESS | SAFE_REFUSAL)"
+          },
+          "op": {
+            "type": "string",
+            "description": "Operation executed ('cagr')"
+          },
+          "value": {
+            "type": "number",
+            "description": "Exact CAGR decimal value"
+          },
+          "formatted": {
+            "type": "string",
+            "description": "Formatted CAGR percentage string (e.g. '11.77%')"
+          },
+          "operands": {
+            "type": "array",
+            "description": "Metric values used in calculation with accession provenance"
+          }
+        },
+        "required": [
+          "status",
+          "op"
+        ]
       }
     },
     {
       "name": "lattice_arith_evaluate",
       "version": "1.2.1",
-      "description": "Deterministic zero-error algebraic solver (cagr, ratio, multiply, divide, yoy_series, product_chain) over verified SEC EDGAR financial metrics.",
+      "description": "Deterministic zero-error algebraic solver over verified SEC EDGAR metrics supporting operations: 'cagr', 'ratio', 'multiply', 'divide', 'yoy_series', 'product_chain', and 'margin'. Use this tool when computing mathematical combinations of SEC filing metrics (e.g. gross margin, debt-to-equity ratio, year-over-year revenue series) where algebraic precision is mandatory and language model arithmetic confabulation is unacceptable.",
       "annotations": {
         "title": "Certified Financial Arithmetic",
         "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "type": "string",
+            "description": "Operation to perform (cagr | ratio | multiply | divide | yoy_series | product_chain | margin)"
+          },
+          "company": {
+            "type": "string",
+            "description": "Ticker or legal entity when resolving EDGAR cells"
+          },
+          "metric": {
+            "type": "string",
+            "description": "Target EDGAR accounting metric"
+          },
+          "start_period": {
+            "type": "string",
+            "description": "Start fiscal period (e.g. 'FY2020')"
+          },
+          "end_period": {
+            "type": "string",
+            "description": "End fiscal period (e.g. 'FY2023')"
+          },
+          "periods": {
+            "type": "string",
+            "description": "Optional comma-separated fiscal periods for series (e.g. 'FY2021,FY2022,FY2023')"
+          },
+          "factors": {
+            "type": "string",
+            "description": "Optional comma-separated positive factors for product_chain"
+          },
+          "low_tokens": {
+            "type": "boolean",
+            "description": "Optional. When true, returns compact JSON schema."
+          }
+        },
+        "required": [
+          "op"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Execution status (VERIFIED_SUCCESS | SAFE_REFUSAL)"
+          },
+          "op": {
+            "type": "string"
+          },
+          "value": {
+            "description": "Numerical or structured calculation result"
+          },
+          "formatted": {
+            "type": "string",
+            "description": "Human-readable formatted result"
+          },
+          "operands": {
+            "type": "array",
+            "description": "Operands with accession provenance"
+          }
+        },
+        "required": [
+          "status",
+          "op"
+        ]
       }
     },
     {
       "name": "vln_capabilities_overview",
       "version": "1.2.1",
-      "description": "Dynamic scope overview and capability boundaries for the Volumetric Lattice Network.",
+      "description": "Dynamic scope overview and capability boundaries for the Volumetric Lattice Network financial engine. Returns verified coverage matrices, supported valuation packs, available algebraic operators, taxonomy concept aliases, and API quota policies. Use this tool to discover supported analytical packs and verify system boundaries before executing multi-step analysis.",
       "annotations": {
         "title": "VLN Capabilities Overview",
         "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "low_tokens": {
+            "type": "boolean",
+            "description": "Optional. When true, returns compact JSON schema."
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "string",
+            "description": "Engine name and version"
+          },
+          "version": {
+            "type": "string"
+          },
+          "certified_valuation_packs": {
+            "type": "object",
+            "description": "List of available structured valuation packs"
+          },
+          "certified_financial_arithmetic": {
+            "type": "object",
+            "description": "Supported deterministic algebraic solvers"
+          }
+        },
+        "required": [
+          "platform",
+          "version"
+        ]
       }
     },
     {
       "name": "query_sec_sector_peers",
       "version": "1.2.1",
-      "description": "Multi-company sector and industry financial comparisons declared in SEC filings.",
+      "description": "Queries multi-company sector and industry financial comparisons declared in SEC filings. Returns standardized fundamental metrics across peer companies within a specified sector (e.g. semiconductors, enterprise software, retail banking, aerospace). Use this tool for relative fundamental analysis, cross-company benchmarking, and sector baseline metric comparisons.",
       "annotations": {
         "title": "Query SEC Sector Peers",
         "readOnlyHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sector_or_industry": {
+            "type": "string",
+            "description": "Industry or sector description as declared in SEC filings (e.g. 'semiconductors', 'optics', 'cloud_software')"
+          },
+          "metrics": {
+            "type": "string",
+            "description": "Optional comma-separated SEC XBRL metrics (e.g. 'Revenues,NetIncomeLoss,GrossProfit')"
+          },
+          "period": {
+            "type": "string",
+            "description": "Optional filing period, e.g. 'FY2023'"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Optional peer limit, default 5"
+          },
+          "low_tokens": {
+            "type": "boolean",
+            "description": "Optional. When true, returns compact JSON schema."
+          }
+        },
+        "required": [
+          "sector_or_industry"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Query status"
+          },
+          "sector_or_industry": {
+            "type": "string"
+          },
+          "period": {
+            "type": "string"
+          },
+          "peers": {
+            "type": "array",
+            "description": "List of peer company metrics with filing accessions"
+          }
+        },
+        "required": [
+          "status",
+          "sector_or_industry"
+        ]
       }
     }
   ],
