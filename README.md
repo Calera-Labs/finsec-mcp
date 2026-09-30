@@ -103,6 +103,31 @@ Add to `~/.config/zed/settings.json`:
 
 ---
 
+### 5. Stdio JSON-RPC & Zero-Config Auto-Bridge
+
+For local agent workflows (Cursor, Claude Code, Antigravity, or custom runners) using stdio:
+
+```json
+{
+  "mcpServers": {
+    "finsec": {
+      "command": "npx",
+      "args": ["-y", "@caleralabs/finsec-mcp"]
+    }
+  }
+}
+```
+
+#### 🔗 Zero-Config Cross-MCP Credential Sharing
+When executed via stdio, `@caleralabs/finsec-mcp` automatically discovers and links credentials stored at `~/.calera/icx.env` or created when running `@caleralabs/llm-vm-mcp` (`claim_free_icx_tokens`). 
+
+A single Calera API key (`ICX_API_KEY`) unifies your entire AI stack:
+* **FINSEC Ground Truth:** 4.06M certified SEC EDGAR facts with zero hallucination.
+* **LLM-VM Execution:** Hermetic zero-escape MicroVM sandboxes.
+* **ICX Memory:** Shared infinite-context memory space across agent sessions.
+
+---
+
 ## 🛠️ Certified Tools Surface Area
 
 The FINSEC MCP server exposes **7 certified tools**:

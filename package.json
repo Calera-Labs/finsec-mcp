@@ -7,6 +7,9 @@
   "bin": {
     "finsec-mcp": "./index.js"
   },
+  "scripts": {
+    "test": "node test/test_stdio.js"
+  },
   "mcpName": "io.github.Calera-Labs/finsec-mcp",
   "repository": {
     "type": "git",
